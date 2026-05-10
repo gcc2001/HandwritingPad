@@ -1,0 +1,142 @@
+﻿<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HandwritingPad.Controls"
+    x:Class="HandwritingPad.MainWindow"
+    Width="1040"
+    Height="680"
+    MinWidth="820"
+    FontFamily="{StaticResource ContentControlThemeFontFamily}"
+    MinHeight="520"
+    Icon="Assets/avalonia-logo.ico"
+    Title="手写板">
+
+    <Grid
+        RowDefinitions="Auto,*,Auto"
+        ColumnDefinitions="*,320"
+        Margin="12"
+        RowSpacing="10"
+        ColumnSpacing="10">
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Orientation="Horizontal"
+            Spacing="10">
+
+            <Button
+                Content="清空"
+                Click="ClearButton_OnClick" />
+
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="模型：" />
+
+            <ComboBox
+                Width="160"
+                ItemsSource="{Binding ModelProfiles}"
+                SelectedItem="{Binding SelectedModelProfile}" />
+
+            <CheckBox
+                Content="自动粘贴"
+                IsChecked="{Binding AutoPaste}" />
+
+        </StackPanel>
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            BorderBrush="#999"
+            BorderThickness="1"
+            CornerRadius="6"
+            ClipToBounds="True"
+            Background="White">
+            <controls:InkPad x:Name="InkPad" />
+        </Border>
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            BorderBrush="#CCC"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="10">
+            <DockPanel>
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Margin="0,0,0,10"
+                    Text="候选字符串" />
+
+                <TextBlock
+                    DockPanel.Dock="Bottom"
+                    Text="{Binding LastInferenceText}"
+                    TextWrapping="Wrap"
+                    Opacity="0.75"
+                    Margin="0,8,0,0" />
+
+                <StackPanel>
+                    <ScrollViewer MaxHeight="380">
+                        <ItemsControl ItemsSource="{Binding Candidates}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Margin="0,0,0,8"
+                                        Padding="10"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Click="CandidateButton_OnClick">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Text="{Binding Text}"
+                                                FontSize="22"
+                                                TextWrapping="Wrap" />
+                                            <TextBlock
+                                                Text="{Binding ConfidenceText}"
+                                                Opacity="0.65"
+                                                Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0,12,0,8"
+                        Text="联想" />
+
+                    <ItemsControl ItemsSource="{Binding Suggestions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Margin="0,0,8,8"
+                                    Padding="10,6"
+                                    Click="SuggestionButton_OnClick">
+                                    <TextBlock
+                                        Text="{Binding Text}"
+                                        FontSize="18" />
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Text="{Binding Status}"
+            TextWrapping="Wrap"
+            Opacity="0.8" />
+    </Grid>
+</Window>

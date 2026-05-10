@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+
+    <!-- Build-time ONNX Runtime flavor: cpu / cuda / directml. -->
+    <OnnxRuntimeFlavor Condition="'$(OnnxRuntimeFlavor)' == ''">cpu</OnnxRuntimeFlavor>
+    <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OnnxRuntimeFlavor)' == 'cpu'">
+    <DefineConstants>$(DefineConstants);ORT_CPU</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OnnxRuntimeFlavor)' == 'cuda'">
+    <DefineConstants>$(DefineConstants);ORT_CUDA</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OnnxRuntimeFlavor)' == 'directml'">
+    <DefineConstants>$(DefineConstants);ORT_DIRECTML</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OnnxRuntimeFlavor)' == 'cpu'">
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.25.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OnnxRuntimeFlavor)' == 'cuda'">
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.25.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OnnxRuntimeFlavor)' == 'directml'">
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets/Models/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Include="Assets/Rules/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <AvaloniaResource Include="Assets\avalonia-logo.ico" />
+
+    <AvaloniaResource Include="Assets/NotoSansSC-Regular.otf" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OnnxRuntimeFlavor)' == 'cuda' and '$(RuntimeIdentifier)' == 'win-x64'">
+    <None Include="Native/cuda/win-x64/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>cuda/%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OnnxRuntimeFlavor)' == 'cuda' and '$(RuntimeIdentifier)' == 'linux-x64'">
+    <None Include="Native/cuda/linux-x64/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>cuda/%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </None>
+  </ItemGroup>
+</Project>

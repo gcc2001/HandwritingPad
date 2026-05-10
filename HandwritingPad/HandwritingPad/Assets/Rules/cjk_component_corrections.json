@@ -1,0 +1,12 @@
+[
+  { "Input": "云力", "Output": "动", "Bonus": 0.35 },
+  { "Input": "日月", "Output": "明", "Bonus": 0.28 },
+  { "Input": "木木", "Output": "林", "Bonus": 0.28 },
+  { "Input": "口马", "Output": "吗", "Bonus": 0.26 },
+  { "Input": "口巴", "Output": "吧", "Bonus": 0.24 },
+  { "Input": "女也", "Output": "她", "Bonus": 0.25 },
+  { "Input": "亻尔", "Output": "你", "Bonus": 0.25 },
+  { "Input": "讠吾", "Output": "语", "Bonus": 0.24 },
+  { "Input": "氵青", "Output": "清", "Bonus": 0.22 },
+  { "Input": "氵每", "Output": "海", "Bonus": 0.22 }
+]
